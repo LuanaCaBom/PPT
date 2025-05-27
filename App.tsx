@@ -19,18 +19,29 @@ export default function App() {
   const[escolha, setEscolha] = useState('');
   const[imagem, setImagem] = useState(0); 
   const[texto, setTexto] = useState('');
+
+  let numero = 0;
+  let jogador = 0;
   
 
   function oponente(){
-    setNum(Math.floor(Math.random() * 3));
+    console.log('Entrou no Oponente');
+    numero = Math.floor(Math.random() * 3)
+    console.log('oponente ', numero);
+    setNum(numero);
     
   }
 
   function status(){
-    if(imagem == Num){
+    console.log('Entrou no Status');
+    console.log("Num ", Num);
+    console.log("Imagem ", imagem);
+    console.log("Numero ", numero);
+    console.log("Jogador ", jogador);
+    if(jogador == numero){
       setTexto('Empate!');
     }
-    else if((Num == 0 && imagem == 1) || (Num == 1 && imagem == 2) || (Num == 2 && imagem == 0)){
+    else if((numero == 0 && jogador == 1) || (numero == 1 && jogador == 2) || (numero == 2 && jogador == 0)){
       setTexto('Parabéns, você ganhou!');
     }
     else{
@@ -39,27 +50,30 @@ export default function App() {
   }
 
   function jogar(){
+    console.log('Entrou no Jogar');
     if(Number(escolha) == 1){
       setImagem(0);
+      jogador = 0;
     }
     else if(Number(escolha) == 2){
       setImagem(1);
+      jogador = 1;
     }
     else if(Number(escolha) == 3){
       setImagem(2);
+      jogador = 2;
     }
     oponente();
     status();
     
   }
-  console.log(texto);
-  console.log(Num);
+  
   return (
     <View style={styles.fundo}>
       <Text style={styles.titulo}>Boa Sorte!</Text>
       <Image style={styles.imagem} source={imagens1[Num]}></Image>
       <Text style={styles.textoMeio}>{texto}</Text>
-      <Image style={styles.imagem} source={imagens2[Number(imagem)]}></Image>
+      <Image style={styles.imagem} source={imagens2[imagem]}></Image>
       <Text style={styles.texto}>1-Pedra   2-Papel   3-Tesoura</Text>
       <TextInput  style={styles.input} value={escolha} 
                   onChangeText={setEscolha} keyboardType='decimal-pad'
