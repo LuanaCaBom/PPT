@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, TextInput, Image, Pressable, View, ImageSourcePropType} from 'react-native';
+import { StyleSheet, Text, Image, Pressable, View, ImageSourcePropType} from 'react-native';
 import {useState} from 'react';
 
 const imagens1: ImageSourcePropType[] = [
@@ -15,70 +15,58 @@ const imagens2: ImageSourcePropType[] = [
 ]
 
 export default function App() {
-  const[Num, setNum] = useState(0);
-  const[escolha, setEscolha] = useState('');
-  const[imagem, setImagem] = useState(0); 
+  const[sorteio, setSorteio] = useState(0);
+  const[jogador, setJogador] = useState(0);
+  const[escolha, setEscolha] = useState(''); 
   const[texto, setTexto] = useState('');
+  const[teste, setTeste] = useState('');
 
-  let numero = 0;
-  let jogador = 0;
+  function jogar(escolha: number){
+    let jogador1 = 0;
+    let sorteio1 = 0;
   
-
-  function oponente(){
-    console.log('Entrou no Oponente');
-    numero = Math.floor(Math.random() * 3)
-    console.log('oponente ', numero);
-    setNum(numero);
-    
-  }
-
-  function status(){
-    console.log('Entrou no Status');
-    console.log("Num ", Num);
-    console.log("Imagem ", imagem);
-    console.log("Numero ", numero);
-    console.log("Jogador ", jogador);
-    if(jogador == numero){
-      setTexto('Empate!');
+    if(escolha == 1){
+      jogador1 = 0;
+      setJogador(jogador1);
     }
-    else if((numero == 0 && jogador == 1) || (numero == 1 && jogador == 2) || (numero == 2 && jogador == 0)){
+    else if(escolha == 2){
+      jogador1 = 1;
+      setJogador(jogador1);
+    }
+    else if(escolha == 3){
+      jogador1 = 2;
+      setJogador(jogador1);
+    }
+
+    sorteio1 = Math.floor(Math.random() * 3);
+    setSorteio(sorteio1);
+    
+    if(jogador1 == sorteio1){
+      setTexto('Empate!');
+      setTeste('empate');
+    }
+    else if((sorteio1 == 0 && jogador1 == 1) || (sorteio1 == 1 && jogador1 == 2) || (sorteio1 == 2 && jogador1 == 0)){
       setTexto('Parabéns, você ganhou!');
+      setTeste('ganhou');
     }
     else{
       setTexto('Que pena, você perdeu!');
+      setTeste('perdeu');
     }
-  }
-
-  function jogar(){
-    console.log('Entrou no Jogar');
-    if(Number(escolha) == 1){
-      setImagem(0);
-      jogador = 0;
-    }
-    else if(Number(escolha) == 2){
-      setImagem(1);
-      jogador = 1;
-    }
-    else if(Number(escolha) == 3){
-      setImagem(2);
-      jogador = 2;
-    }
-    oponente();
-    status();
     
   }
   
   return (
     <View style={styles.fundo}>
       <Text style={styles.titulo}>Boa Sorte!</Text>
-      <Image style={styles.imagem} source={imagens1[Num]}></Image>
-      <Text style={styles.textoMeio}>{texto}</Text>
-      <Image style={styles.imagem} source={imagens2[imagem]}></Image>
-      <Text style={styles.texto}>1-Pedra   2-Papel   3-Tesoura</Text>
-      <TextInput  style={styles.input} value={escolha} 
-                  onChangeText={setEscolha} keyboardType='decimal-pad'
-                  placeholder='Digite o número de sua escolha:'/>
-      <Pressable style={styles.botao} onPress={jogar} ><Text style={styles.texto}>Jogar</Text></Pressable>
+      <Image style={styles.imagem} source={imagens1[sorteio]}></Image>
+      <Text style={teste == 'ganhou' ? styles.ganhou : teste == 'perdeu' ? styles.perdeu : styles.empate}>{texto}</Text>
+      <Image style={styles.imagem} source={imagens2[jogador]}></Image>
+      <View style={styles.line}>
+        <Pressable style={styles.botao} onPress={() => jogar(1)} ><Text style={styles.texto}>Pedra</Text></Pressable>
+        <Pressable style={styles.botao} onPress={() => jogar(2)} ><Text style={styles.texto}>Papel</Text></Pressable>
+        <Pressable style={styles.botao} onPress={() => jogar(3)} ><Text style={styles.texto}>Tesoura</Text></Pressable>
+      </View>
       <StatusBar style="auto" /> 
     </View>
   );
@@ -97,8 +85,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     margin: 10,
   },
-  textoMeio: {
-    color: '#000',
+  ganhou:{
+    color: 'green',
+    fontSize: 26,
+    fontWeight: 'bold',
+    margin: 10,
+  },
+  perdeu:{
+    color: 'red',
+    fontSize: 26,
+    fontWeight: 'bold',
+    margin: 10,
+  },
+  empate:{
+    color: 'yellow',
     fontSize: 26,
     fontWeight: 'bold',
     margin: 10,
@@ -110,15 +110,6 @@ const styles = StyleSheet.create({
   line: {
     flexDirection: 'row'
   },
-  input: {
-    backgroundColor: 'rgb(255, 255, 255)',
-    padding: 20,
-    margin: 10,
-    width: 280,
-    borderRadius: 8,
-    borderWidth: 3,
-    borderColor: 'black',
-  },
   fundo: {
     backgroundColor: 'rgb(0, 188, 235)', 
     flex: 1, 
@@ -127,7 +118,7 @@ const styles = StyleSheet.create({
   },
   botao: {
     alignItems: "center",
-    width: 120,
+    width: 110,
     justifyContent: "center",
     padding: 5,
     borderRadius: 5,
@@ -135,5 +126,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(221, 217, 0)',
     borderWidth: 3,
     marginTop: 10,
+    marginRight: 10,
   }
 });
